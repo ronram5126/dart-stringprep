@@ -62,11 +62,7 @@ final Map<String, List<List<String>>> profiles = {
     ['bidi-ral', 'rfc3454-D_1'],
     ['bidi-l', 'rfc3454-D_2'],
     ['unassigned', 'rfc3454-A_1']
-  ],
-  'nodeprep-prohibit': "\"&'/:<>@".split('').map((character) {
-    var code = character.codeUnitAt(0);
-    return [code, code, ''];
-  })
+  ]
 };
 
 final List<String> profileNames = [

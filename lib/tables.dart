@@ -3139,5 +3139,9 @@ final Map<String, List<List<dynamic>>> tables = {
     [194560, 195101, ""],
     [983040, 1048573, ""],
     [1048576, 1114109, ""]
-  ]
+  ],
+  "nodeprep-prohibit": "\"&'/:<>@".split('').map((character) {
+    var code = character.codeUnitAt(0);
+    return [code, code, ''];
+  }).toList()
 };

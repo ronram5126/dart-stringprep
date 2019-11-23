@@ -1,7 +1,7 @@
 import 'tables.dart';
 import 'profiles.dart';
 
-dynamic _findRule(List<List<dynamic>> table, String character) {
+List<dynamic> _findRule(List<List<dynamic>> table, String character) {
   var code = character.codeUnitAt(0);
   var lo = 0;
   var hi = table.length;
@@ -31,7 +31,7 @@ bool _someRule(List<List<dynamic>> table, String string) {
 String _substituteString(List<List<dynamic>> table, String string) {
   return string.split('').map((character) {
     var rule = _findRule(table, character);
-    return rule ? rule[2] : character;
+    return rule != null && rule.length >= 2 ? rule[2] : character;
   }).join('');
 }
 
@@ -41,34 +41,40 @@ String _substituteString(List<List<dynamic>> table, String string) {
 // 1 - target table or null
 // 2 and on - additional arugments
 
-String _applyOperation(List<String> operation, String string) {
-  var table = operation[1] != null ? tables[operation[1]] : null;
+String _applyOperation(List<String> operation, String str) {
+  var table = null;
+
+  if (operation != null && operation.length >= 2 && operation[1] != null) {
+    table = tables[operation[1]];
+  }
+
   switch (operation[0]) {
     case 'map':
-      return _substituteString(table, string);
+      return _substituteString(table, str);
     case 'prohibit':
-      if (_someRule(table, string)) {
+      if (_someRule(table, str)) {
         throw 'stringprep contains prohibited';
       }
-      return string;
+      return str;
     case 'unassigned':
-      if (_someRule(table, string)) {
+      if (_someRule(table, str)) {
         throw 'stringprep contains unassigned';
       }
-      return string;
+      return str;
     default:
-      return string;
+      return str;
   }
 }
 
 stringprep(String profile, String string) {
-  return profiles[profile].fold(string, (String str, List<String> operation) {
+  var _profile = profiles[profile];
+  return _profile.fold(string, (String str, List<String> operation) {
     return _applyOperation(operation, str);
   });
 }
 
 typedef String STRPREPFUNC(String str);
 
-Map<String, STRPREPFUNC> preps = new Map<String, STRPREPFUNC>()
+Map<String, STRPREPFUNC> preps = Map<String, STRPREPFUNC>()
   ..addEntries(profileNames.map((profileName) =>
-      new MapEntry(profileName, (String str) => stringprep(profileName, str))));
+      MapEntry(profileName, (String str) => stringprep(profileName, str))));
