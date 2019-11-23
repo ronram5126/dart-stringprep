@@ -5,7 +5,7 @@ homepage: https://github.com/ronram5126/stun-dart
 description: Implementation of String prep function for dart. This source was created using Arachnid's stringprep-js. It is suppose to be implementation of RFC3454
 
 environment:
-  sdk: ">=2.2.2"
+  sdk: ">=2.2.2<3.0.0"
 
 dependencies:
   
